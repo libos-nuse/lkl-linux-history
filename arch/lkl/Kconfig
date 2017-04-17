@@ -24,6 +24,29 @@ config LKL
        select HIGH_RES_TIMERS
        select NET_SCHED
        select NET_SCH_FQ
+       select NETFILTER
+       select IP_NF_IPTABLES
+       select IP_NF_FILTER
+       select NF_TABLES
+       select NF_CONNTRACK
+       select NF_NAT
+       select NF_NAT_NEEDED
+       select NF_NAT_PROTO_DCCP
+       select NF_NAT_PROTO_UDPLITE
+       select NF_NAT_PROTO_SCTP
+       select NF_NAT_REDIRECT
+       select NF_TABLES
+       select NF_DEFRAG_IPV4
+       select NF_CONNTRACK_IPV4
+       select NFT_NFT_NAT
+       select NETFILTER_XTABLES
+       select NF_NAT_IPV4
+       select NF_NAT_MASQUERADE_IPV4
+       select IP_NF_NAT
+       select IP_NF_TARGET_MASQUERADE
+       select NETFILTER_XT_NAT
+
+
 
 config OUTPUTFORMAT
        string
