@@ -405,6 +405,14 @@ struct lkl_netdev *lkl_netdev_raw_create(const char *ifname);
  */
 struct lkl_netdev *lkl_netdev_macvtap_create(const char *path, int offload);
 
+/**
+ * lkl_netdev_fifo_create - create fifo net_device for the virtio net
+ *                         backend
+ *
+ * @ifparams - fifo name for rx and tx.(ifname_rx|ifname_tx)
+ */
+struct lkl_netdev *lkl_netdev_fifo_create(char *ifparams);
+
 /*
  * lkl_register_dbg_handler- register a signal handler that loads a debug lib.
  *
