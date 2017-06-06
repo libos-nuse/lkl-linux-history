@@ -229,13 +229,15 @@ struct lkl_netdev *lkl_netdev_fifo_create(char *ifname)
 
 	fd_rx = open(ifname_rx, O_RDWR|O_NONBLOCK);
 	if (fd_rx < 0) {
-		perror("open");
+		perror("open rx fifo");
+		fprintf(stderr, "ifname_rx = %s\n", ifname_rx);
 		return NULL;
 	}
 
 	fd_tx = open(ifname_tx, O_RDWR|O_NONBLOCK);
 	if (fd_tx < 0) {
-		perror("open");
+		perror("open tx fifo");
+		fprintf(stderr, "ifname_tx = %s\n", ifname_tx);
 		return NULL;
 	}
 

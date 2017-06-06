@@ -316,7 +316,7 @@ hijack_init(void)
 							"No offload features will be "
 							"enabled.\n");
 				}
-				offload[i] = 0;
+				//offload[i] = 0;
 				if (strcmp(iftype[i], "dpdk") == 0)
 					nd[i] = lkl_netdev_dpdk_create(ifparams[i]);
 				else if (strcmp(iftype[i], "vde") == 0)
