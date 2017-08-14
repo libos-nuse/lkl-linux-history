@@ -413,6 +413,14 @@ struct lkl_netdev *lkl_netdev_macvtap_create(const char *path, int offload);
  */
 struct lkl_netdev *lkl_netdev_fifo_create(char *ifparams);
 
+/**
+ * lkl_netdev_vale_create - create vale net_device for the virtio net
+ *                         backend
+ *
+ * @ifparams - vale name
+ */
+struct lkl_netdev *lkl_netdev_vale_create(char *ifparams);
+
 /*
  * lkl_register_dbg_handler- register a signal handler that loads a debug lib.
  *

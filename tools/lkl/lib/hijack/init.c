@@ -325,6 +325,10 @@ hijack_init(void)
 					nd[i] = lkl_netdev_raw_create(ifparams[i]);
 				else if(strcmp(iftype[i], "fifo") == 0)
 					nd[i] = lkl_netdev_fifo_create(ifparams[i]);
+				else if(strcmp(iftype[i], "vale") == 0)
+					nd[i] = lkl_netdev_vale_create(ifparams[i]);
+				else
+					fprintf(stderr, "unknown iftype\n");
 			}
 		}
 
