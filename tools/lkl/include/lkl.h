@@ -410,8 +410,9 @@ struct lkl_netdev *lkl_netdev_macvtap_create(const char *path, int offload);
  *                         backend
  *
  * @ifparams - fifo name for rx and tx.(ifname_rx|ifname_tx)
+ * @ascii    - 1 if the encoding/decoding is based on ASCII dump
  */
-struct lkl_netdev *lkl_netdev_fifo_create(char *ifparams);
+struct lkl_netdev *lkl_netdev_fifo_create(char *ifparams, int ascii);
 
 /*
  * lkl_register_dbg_handler- register a signal handler that loads a debug lib.

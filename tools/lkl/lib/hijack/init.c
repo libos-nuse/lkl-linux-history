@@ -324,7 +324,9 @@ hijack_init(void)
 				else if (strcmp(iftype[i], "raw") == 0)
 					nd[i] = lkl_netdev_raw_create(ifparams[i]);
 				else if(strcmp(iftype[i], "fifo") == 0)
-					nd[i] = lkl_netdev_fifo_create(ifparams[i]);
+					nd[i] = lkl_netdev_fifo_create(ifparams[i], 0);
+				else if(strcmp(iftype[i], "fifo-ascii") == 0)
+					nd[i] = lkl_netdev_fifo_create(ifparams[i], 1);
 			}
 		}
 
