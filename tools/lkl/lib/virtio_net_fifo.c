@@ -118,7 +118,7 @@ static int btoa(int fd, void *data, size_t len)
 
 	buf = malloc(14*2 + 3 + (len - 14)*3 + 2);
 	if (!buf) {
-		fprintf(stderr, "fifo(btoa): failed to allocate memory\n");
+		fprintf(stderr, "fifo(btoa): failed to allocate memory (len=%ld)\n", len);
 		return -1;
 	}
 
@@ -161,6 +161,8 @@ static int fifo_net_tx(struct lkl_netdev *nd, struct iovec *iov, int cnt)
 		} while (ret == -1 && errno == EINTR);
 	else
 		for (i = 0; i < cnt; i++) {
+			if (iov[i].iov_len == 0)
+				continue;
 			ret += btoa(nd_fifo->fd_tx, iov[i].iov_base,
 				   iov[i].iov_len);
 		}
