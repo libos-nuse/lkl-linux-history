@@ -4,16 +4,7 @@
 #include <stdint.h>
 #include <lkl_host.h>
 
-#define PAGE_SIZE		4096
-
-/* The following are copied from skbuff.h */
-#if (65536/PAGE_SIZE + 1) < 16
-#define MAX_SKB_FRAGS 16UL
-#else
-#define MAX_SKB_FRAGS (65536/PAGE_SIZE + 1)
-#endif
-
-#define VIRTIO_REQ_MAX_BUFS	(MAX_SKB_FRAGS + 2)
+#define VIRTIO_REQ_MAX_BUFS	64
 
 struct virtio_req {
 	uint16_t buf_count;

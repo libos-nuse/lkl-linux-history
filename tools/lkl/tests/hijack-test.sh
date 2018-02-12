@@ -607,6 +607,94 @@ test_tap_multitable_ipv6_rule_table_7()
     echo "$addr" | grep $(ip6_host 1)
 }
 
+test_tap_largemtu_setup()
+{
+    set -e
+
+    tap_change_mtu 0 60000
+}
+
+test_tap_largemtu_ping_lkl_csum_tso()
+{
+    set -e
+
+    # offload
+    # LKL_VIRTIO_NET_F_HOST_TSO4 && LKL_VIRTIO_NET_F_GUEST_TSO4
+    # LKL_VIRTIO_NET_F_CSUM && LKL_VIRTIO_NET_F_GUEST_CSUM
+    set_cfgjson << EOF
+    {
+        "gateway":"$(ip_host)",
+        "gateway6":"$(ip6_host)",
+        "debug":"1",
+        "interfaces": [
+            {
+                "type":"tap",
+                "param":"$(tap_ifname)",
+                "ip":"$(ip_lkl)",
+                "masklen":"$TEST_IP_NETMASK",
+                "ipv6":"$(ip6_lkl)",
+                "masklen6":"$TEST_IP6_NETMASK",
+                "mac": "$TEST_MAC0",
+                "offload":"0x883",
+                "mtu":"60000"
+            }
+        ]
+    }
+EOF
+
+    lkl_test_cmd sudo ip -6 neigh del $(ip6_lkl) dev $(tap_ifname)
+    lkl_test_cmd sudo ip neigh del $(ip_lkl) dev $(tap_ifname)
+    run_hijack_cfg $(lkl_test_cmd which sleep) 10 &
+    sleep 5
+    lkl_test_cmd sudo ping -c 2 -s 50000 $(ip_lkl)
+    lkl_test_cmd sudo ping6 -c 2 -s 50000 $(ip6_lkl)
+    wait
+}
+
+test_tap_largemtu_ping_lkl_csum_tso_mrgrxbuf()
+{
+    set -e
+
+    # offload
+    # LKL_VIRTIO_NET_F_HOST_TSO4 && LKL_VIRTIO_NET_F_MRG_RXBUF
+    # LKL_VIRTIO_NET_F_CSUM && LKL_VIRTIO_NET_F_GUEST_CSUM
+    set_cfgjson << EOF
+    {
+        "gateway":"$(ip_host)",
+        "gateway6":"$(ip6_host)",
+        "debug":"1",
+        "interfaces": [
+            {
+                "type":"tap",
+                "param":"$(tap_ifname)",
+                "ip":"$(ip_lkl)",
+                "masklen":"$TEST_IP_NETMASK",
+                "ipv6":"$(ip6_lkl)",
+                "masklen6":"$TEST_IP6_NETMASK",
+                "mac": "$TEST_MAC0",
+                "offload":"0x8803",
+                "mtu":"60000"
+            }
+        ]
+    }
+EOF
+
+    lkl_test_cmd sudo ip -6 neigh del $(ip6_lkl) dev $(tap_ifname)
+    lkl_test_cmd sudo ip neigh del $(ip_lkl) dev $(tap_ifname)
+    run_hijack_cfg $(lkl_test_cmd which sleep) 10 &
+    sleep 5
+    lkl_test_cmd sudo ping -c 2 -s 50000 $(ip_lkl)
+    lkl_test_cmd sudo ping6 -c 2 -s 50000 $(ip6_lkl)
+    wait
+}
+
+test_tap_largemtu_cleanup()
+{
+    set -e
+
+    tap_change_mtu 0 1500
+}
+
 test_vde_setup()
 {
     set_cfgjson << EOF
@@ -717,7 +805,7 @@ if ! lkl_test_cmd test -c /dev/net/tun &>/dev/null; then
     lkl_test_plan 0 "hijack tap backend tests"
     echo "missing /dev/net/tun"
 else
-    lkl_test_plan 23 "hijack tap backend tests"
+    lkl_test_plan 27 "hijack tap backend tests"
     lkl_test_run 1 test_tap_setup
     lkl_test_run 2 test_tap_ping_host
     lkl_test_run 3 test_tap_ping_lkl
@@ -741,7 +829,11 @@ else
     lkl_test_run 21 test_tap_multitable_ipv6_rule_table_5
     lkl_test_run 22 test_tap_multitable_ipv6_rule_table_6
     lkl_test_run 23 test_tap_multitable_ipv6_rule_table_7
-    lkl_test_run 24 test_tap_cleanup
+    lkl_test_run 24 test_tap_largemtu_setup
+    lkl_test_run 25 test_tap_largemtu_ping_lkl_csum_tso
+    lkl_test_run 26 test_tap_largemtu_ping_lkl_csum_tso_mrgrxbuf
+    lkl_test_run 27 test_tap_largemtu_cleanup
+    lkl_test_run 28 test_tap_cleanup
 fi
 
 if [ -z "$LKL_HOST_CONFIG_VIRTIO_NET_VDE" ]; then

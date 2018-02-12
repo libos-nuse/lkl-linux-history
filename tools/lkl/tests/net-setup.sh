@@ -96,6 +96,11 @@ tap_prepare()
     fi
 }
 
+tap_change_mtu()
+{
+    lkl_test_cmd sudo ip link set $(tap_ifname $1) mtu $2
+}
+
 tap_setup()
 {
     if [ -n "$LKL_HOST_CONFIG_BSD" ]; then
