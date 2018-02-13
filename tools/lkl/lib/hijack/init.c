@@ -181,7 +181,7 @@ int lkl_debug, lkl_running;
 
 static int nd_id[LKL_IF_MAX];
 static struct lkl_netdev *nd[LKL_IF_MAX];
-static struct lkl_config *cfg;
+struct lkl_config *cfg;
 
 static int config_load(void)
 {

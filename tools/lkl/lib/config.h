@@ -43,6 +43,7 @@ struct lkl_config {
 	char *boot_cmdline;
 	char *dump;
 	char *delay_main;
+	char *virtnet_queue_depth;
 };
 
 int init_config(struct lkl_config *cfg);

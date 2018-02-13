@@ -16,6 +16,8 @@
 #include <lkl.h>
 #include <lkl_host.h>
 
+struct lkl_config *cfg;
+
 char doc[] = "";
 char args_doc[] = "-t fstype fsimage_path tar_path";
 static struct argp_option options[] = {

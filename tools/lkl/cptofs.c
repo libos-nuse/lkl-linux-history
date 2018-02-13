@@ -16,6 +16,8 @@
 #include <lkl.h>
 #include <lkl_host.h>
 
+struct lkl_config *cfg;
+
 static const char doc_cptofs[] = "Copy files to a filesystem image";
 static const char doc_cpfromfs[] = "Copy files from a filesystem image";
 static const char args_doc_cptofs[] = "-t fstype -i fsimage path... fs_path";

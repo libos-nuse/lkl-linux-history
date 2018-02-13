@@ -28,6 +28,8 @@ enum {
 	BACKEND_NONE,
 };
 
+struct lkl_config *cfg;
+
 const char *backends[] = { "tap", "macvtap", "raw", "dpdk", "pipe", "loopback",
 			   NULL };
 static struct {

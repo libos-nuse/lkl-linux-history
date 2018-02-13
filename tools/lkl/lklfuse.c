@@ -16,6 +16,8 @@
 
 #define LKLFUSE_VERSION "0.1"
 
+struct lkl_config *cfg;
+
 struct lklfuse {
 	const char *file;
 	const char *log;

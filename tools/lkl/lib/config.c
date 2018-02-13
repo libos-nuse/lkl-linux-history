@@ -174,6 +174,9 @@ int load_config_json(struct lkl_config *cfg, char *jstr)
 			cfgptr = &cfg->dump;
 		} else if (jsoneq(jstr, &toks[pos], "delay_main") == 0) {
 			cfgptr = &cfg->delay_main;
+		} else if (jsoneq(jstr, &toks[pos],
+					"virtnet_queue_depth") == 0) {
+			cfgptr = &cfg->virtnet_queue_depth;
 		} else {
 			lkl_printf("unexpected key in json %.*s\n",
 					toks[pos].end-toks[pos].start,

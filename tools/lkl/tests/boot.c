@@ -21,6 +21,8 @@
 
 #include "test.h"
 
+struct lkl_config *cfg;
+
 #ifndef __MINGW32__
 #define sleep_ns 87654321
 int lkl_test_nanosleep(void)

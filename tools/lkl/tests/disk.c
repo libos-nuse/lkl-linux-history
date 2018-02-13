@@ -17,6 +17,8 @@
 #include "test.h"
 #include "cla.h"
 
+struct lkl_config *cfg;
+
 static struct {
 	int printk;
 	const char *disk;

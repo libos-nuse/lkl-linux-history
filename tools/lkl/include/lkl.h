@@ -389,10 +389,10 @@ struct lkl_netdev_args {
  * case of error
  */
 #ifdef LKL_HOST_CONFIG_VIRTIO_NET
-int lkl_netdev_add(struct lkl_netdev *nd, struct lkl_netdev_args* args);
+int lkl_netdev_add(struct lkl_netdev *nd, struct lkl_netdev_args *args);
 #else
 static inline int lkl_netdev_add(struct lkl_netdev *nd,
-				 struct lkl_netdev_args *args)
+				struct lkl_netdev_args *args)
 {
 	return -LKL_ENOSYS;
 }

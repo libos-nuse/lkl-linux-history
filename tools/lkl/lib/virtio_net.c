@@ -1,7 +1,9 @@
 #include <string.h>
+#include <stdlib.h>
 #include <lkl_host.h>
 #include "virtio.h"
 #include "endian.h"
+#include "config.h"
 
 #include <lkl/linux/virtio_net.h>
 
@@ -13,7 +15,7 @@
 #define TX_QUEUE_IDX 1
 
 #define NUM_QUEUES (TX_QUEUE_IDX + 1)
-#define QUEUE_DEPTH 128
+#define DEFAULT_QUEUE_DEPTH 128
 
 /* In fact, we'll hit the limit on the devs string below long before
  * we hit this, but it's good enough for now. */
@@ -27,6 +29,8 @@
 #else
 #define bad_request(s) lkl_printf("virtio_net: %s\n", s);
 #endif /* DEBUG */
+
+extern struct lkl_config *cfg;
 
 struct virtio_net_dev {
 	struct virtio_dev dev;
@@ -208,10 +212,12 @@ static struct lkl_mutex **init_queue_locks(int num_queues)
 	return ret;
 }
 
-int lkl_netdev_add(struct lkl_netdev *nd, struct lkl_netdev_args* args)
+int lkl_netdev_add(struct lkl_netdev *nd,
+		struct lkl_netdev_args *args)
 {
 	struct virtio_net_dev *dev;
 	int ret = -LKL_ENOMEM;
+	int virtnet_queue_depth = 0;
 
 	dev = lkl_host_ops.mem_alloc(sizeof(*dev));
 	if (!dev)
@@ -237,13 +243,23 @@ int lkl_netdev_add(struct lkl_netdev *nd, struct lkl_netdev_args* args)
 	if (!dev->queue_locks)
 		goto out_free;
 
+	if (cfg && cfg->virtnet_queue_depth)
+		virtnet_queue_depth = strtol(cfg->virtnet_queue_depth, NULL, 0);
+
+	if (virtnet_queue_depth <= 0 ||
+			(virtnet_queue_depth & (virtnet_queue_depth - 1))) {
+		lkl_printf("invalid virtnet_queue_depth %d, use %d\n",
+				virtnet_queue_depth, DEFAULT_QUEUE_DEPTH);
+		virtnet_queue_depth = DEFAULT_QUEUE_DEPTH;
+	}
+
 	/*
 	 * MUST match the number of queue locks we initialized. We could init
 	 * the queues in virtio_dev_setup to help enforce this, but netdevs are
 	 * the only flavor that need these locks, so it's better to do it
 	 * here.
 	 */
-	ret = virtio_dev_setup(&dev->dev, NUM_QUEUES, QUEUE_DEPTH);
+	ret = virtio_dev_setup(&dev->dev, NUM_QUEUES, virtnet_queue_depth);
 
 	if (ret)
 		goto out_free;
